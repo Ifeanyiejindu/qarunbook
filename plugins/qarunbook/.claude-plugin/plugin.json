@@ -1,0 +1,13 @@
+{
+  "name": "qarunbook",
+  "description": "A QA runbook your coding assistant can read and write. Testers raise what breaks; the assistant reads what failed, fixes it, and marks the issue resolved.",
+  "version": "1.0.0",
+  "author": { "name": "Ifeanyi Ejindu" },
+  "mcpServers": {
+    "qa-runbook": {
+      "type": "http",
+      "url": "${QARUNBOOK_URL:-https://qarunbook.com/api/mcp}",
+      "headers": { "Authorization": "Bearer ${QARUNBOOK_TOKEN}" }
+    }
+  }
+}
