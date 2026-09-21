@@ -101,9 +101,8 @@ prompts surface early.
 
 ## 5. Recording
 
-- `set_result` takes `P` or `F`. **There is no NA** — existing NA cells are set at import time and
-  can't be added through the MCP. If a cell should be NA, say so in your report rather than
-  forcing it.
+- `set_result` takes `P` or `F`. To make a platform not applicable to a check, use `update_check`
+  with `not_applicable_on` — never mark it `P` to get it out of the way.
 - Where you need a durable note, `add_issue` with the evidence then `resolve_issue`.
 - Resolving an issue moves its cells to "needs retest", not to passing — someone must then record
   a result.
@@ -115,6 +114,10 @@ else's `P` this way while finding nothing wrong with it. If your note is about W
 `["WM"]`, not every platform the defect might theoretically touch. If you do displace a mark,
 say so explicitly in your report rather than quietly re-marking a cell you did not observe.
 - Found something genuinely broken? `add_issue` rather than quietly marking `F`.
+- An issue that is vague or wrong — yours or a tester's — gets corrected with `edit_issue`, not a
+  second issue. The original reporter stays on it and the old wording is kept in its history.
+- `list_issues` names any files a tester attached (screenshots, recordings, logs). They are viewed
+  in the web app; say in your report when one is worth a human looking at.
 
 ## 6. Fanning out
 

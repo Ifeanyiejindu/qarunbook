@@ -35,10 +35,15 @@ qarunbook exposes the runbook over MCP, so your coding assistant is on the
 other end of that loop directly:
 
 ```
-list_issues            what did the testers actually find
+list_issues            what did the testers actually find (and what they attached)
 list_checks failing    what is broken right now
+edit_issue             that report was vague — here is what actually happens
 resolve_issue          I fixed it
 ```
+
+Testers can attach screenshots, screen recordings and logs to an issue in the
+web app. Videos stream straight in the page, so a bug is something you watch
+rather than something you read about.
 
 When an issue is marked fixed, the check does not silently go back to passing.
 It reads **R — retest**, because the person who last passed it was looking at a
@@ -122,7 +127,7 @@ their access.
 ## The tools
 
 Read: `list_apps` · `progress` · `list_checks` · `get_check` · `list_issues`
-Write: `set_result` · `add_issue` · `resolve_issue` · `update_check` ·
+Write: `set_result` · `add_issue` · `edit_issue` · `resolve_issue` · `update_check` ·
 `add_check` · `add_section` · `create_app` · `import_plan`
 
 `import_plan` takes a whole markdown test plan and builds the app from it in
