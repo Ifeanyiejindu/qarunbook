@@ -1,5 +1,7 @@
 # qarunbook
 
+![qarunbook — checks filling in across web, Android and iOS](assets/qarunbook-hero.gif)
+
 **Work out what needs testing, then actually get it tested.**
 
 Most teams know they should test before a release. What stops them is not
@@ -53,15 +55,19 @@ never quietly disagree with itself.
 
 ## Install
 
-**Claude Code** — one step, and the two skills come with it:
+### Claude Code
 
-```bash
-claude plugin marketplace add Ifeanyiejindu/qarunbook
-claude plugin install qarunbook@qarunbook
+One step, and the MCP connection and both skills come with it:
+
+```text
+/plugin marketplace add Ifeanyiejindu/qarunbook
+/plugin install qarunbook@qarunbook
 ```
 
-Then set your token, from your qarunbook home page under **Your MCP
-connection**:
+(or from a terminal: `claude plugin marketplace add Ifeanyiejindu/qarunbook` then
+`claude plugin install qarunbook@qarunbook`)
+
+Then set your token, from your qarunbook home page under **Connect your AI**:
 
 ```bash
 export QARUNBOOK_TOKEN="qarb_…"
@@ -70,7 +76,33 @@ export QARUNBOOK_TOKEN="qarb_…"
 The token is yours, not the workspace's. It acts as you, with your role, and
 removing you revokes exactly it.
 
-**Codex** — `~/.codex/config.toml`
+### Updates
+
+Open `/plugin`, choose **Marketplaces**, select **qarunbook**, and turn on
+auto-update — Claude Code checks when it starts. Or update by hand:
+
+```text
+/plugin marketplace update qarunbook
+/plugin update qarunbook@qarunbook
+/reload-plugins
+```
+
+### Codex, Cursor and other agents
+
+Two parts: the MCP connection, and the skills.
+
+**1. The skills** — works with Codex, Cursor, Gemini CLI, OpenCode, Cline and
+other agents that read `SKILL.md` files:
+
+```bash
+npx skills add Ifeanyiejindu/qarunbook --global
+```
+
+Update them later with `npx skills update -g`.
+
+**2. The MCP connection.**
+
+Codex — `~/.codex/config.toml`
 
 ```toml
 [mcp_servers.qa-runbook]
@@ -78,7 +110,7 @@ url = "https://qarunbook.com/api/mcp"
 http_headers = { Authorization = "Bearer qarb_…" }
 ```
 
-**Cursor** — `~/.cursor/mcp.json`
+Cursor — `~/.cursor/mcp.json`
 
 ```json
 {
@@ -91,9 +123,8 @@ http_headers = { Authorization = "Bearer qarb_…" }
 }
 ```
 
-There is no plugin system outside Claude Code, so copy the two `SKILL.md` files
-from `plugins/qarunbook/skills/` into wherever your tool keeps its
-instructions.
+Any other MCP client: it is a Streamable HTTP server at
+`https://qarunbook.com/api/mcp`, authenticated with `Authorization: Bearer <your token>`.
 
 ## The two skills
 
@@ -140,6 +171,10 @@ The server is a small Next.js app over MongoDB. Set `QA_MONGO_URI` and
 `QA_SESSION_SECRET`, deploy, and point `QARUNBOOK_URL` at your own instance.
 Email (invitations, password reset) is optional — without a provider
 configured, accounts verify themselves rather than locking anyone out.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE). The hosted service at qarunbook.com is free while it is new.
 
 ## Status
 
