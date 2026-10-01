@@ -1,6 +1,6 @@
 ---
 name: test-checklist
-description: Build a complete QA test plan for an app — every module, feature and user journey, across each platform it runs on. Use when asked for a test plan, QA checklist, test cases, regression suite, or "what should we test", or when preparing an app for QA, a release or a demo. Produces markdown that imports directly into the App Testing runbook.
+description: Build a complete QA test plan for an app — every module, feature and user journey, across each platform it runs on. Use when asked for a test plan, QA checklist, test cases, regression suite, or "what should we test", or when preparing an app for QA, a release or a demo. Produces markdown that imports directly into a qarunbook runbook.
 ---
 
 # Building a test checklist
@@ -91,8 +91,8 @@ Then the parts. Use tables; keep the steps short enough to read on a phone.
 
 ## Importing it into the runbook
 
-The App Testing runbook (`~/Frontend Projects/app-testing`) imports this format
-directly — upload the `.md` and it creates an app, with sections from the
+qarunbook (https://qarunbook.com) imports this format directly — upload the
+`.md`, or pass it to the `import_plan` MCP tool, and it creates an app, with sections from the
 headings, checks from the table rows, and platforms read from the check table's
 header.
 
