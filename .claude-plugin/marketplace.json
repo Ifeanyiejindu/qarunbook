@@ -3,15 +3,19 @@
   "owner": { "name": "Ifeanyi Ejindu" },
   "metadata": {
     "description": "A QA runbook your coding assistant can read and write.",
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "plugins": [
     {
       "name": "qarunbook",
       "source": "./plugins/qarunbook",
       "description": "Connects Claude to a qarunbook workspace, and adds the two skills that use it: /test-checklist builds the plan from the code, /qa-runbook runs the testing.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": { "name": "Ifeanyi Ejindu" },
+      "homepage": "https://qarunbook.com",
+      "repository": "https://github.com/Ifeanyiejindu/qarunbook",
+      "license": "MIT",
+      "category": "testing",
       "keywords": ["qa", "testing", "test-plan", "runbook", "mcp"]
     }
   ]
