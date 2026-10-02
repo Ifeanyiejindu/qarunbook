@@ -1,0 +1,13 @@
+{
+  "name": "qarunbook",
+  "interface": { "displayName": "qarunbook" },
+  "plugins": [
+    {
+      "name": "qarunbook",
+      "description": "Connects Codex to a qarunbook workspace, and adds the two skills that use it: /test-checklist builds the plan from the code, /qa-runbook runs the testing.",
+      "source": { "source": "local", "path": "./plugins/qarunbook" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "Productivity"
+    }
+  ]
+}

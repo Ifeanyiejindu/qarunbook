@@ -1,0 +1,30 @@
+{
+  "name": "qarunbook",
+  "version": "1.2.0",
+  "description": "A QA runbook your coding assistant can read and write. Testers raise what breaks; the assistant reads what failed, fixes it, and marks the issue resolved. Bundles the qarunbook MCP server and two skills: /test-checklist builds the plan from the code, /qa-runbook runs the testing.",
+  "author": { "name": "Ifeanyi Ejindu", "url": "https://qarunbook.com" },
+  "homepage": "https://qarunbook.com/guides/qa-mcp-server",
+  "repository": "https://github.com/Ifeanyiejindu/qarunbook",
+  "license": "MIT",
+  "keywords": ["qa", "testing", "test-plan", "runbook", "uat", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.codex-plugin/mcp.json",
+  "interface": {
+    "displayName": "qarunbook",
+    "shortDescription": "Read the QA runbook, fix what testers found, send it back for a retest.",
+    "longDescription": "qarunbook holds the test plan, the results per platform and the issues raised against them. This plugin connects Codex to your workspace over MCP and adds two skills: /test-checklist reads your code and drafts the plan, checks and all; /qa-runbook works through the plan, records each result with evidence and verifies fixes. Resolving an issue never passes a check: it reads as retest until a person looks again.",
+    "developerName": "Ifeanyi Ejindu",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://qarunbook.com",
+    "privacyPolicyURL": "https://qarunbook.com/privacy",
+    "termsOfServiceURL": "https://qarunbook.com/terms",
+    "defaultPrompt": [
+      "What did testers find on Android since Friday?",
+      "Clear the QA backlog for the issues that are in this codebase.",
+      "Is this release safe? Use the runbook, not your judgement.",
+      "Build a test plan for this app and import it into qarunbook."
+    ],
+    "brandColor": "#111111"
+  }
+}

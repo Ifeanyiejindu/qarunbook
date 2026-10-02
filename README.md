@@ -55,9 +55,13 @@ never quietly disagree with itself.
 
 ## Install
 
-### Claude Code
+Pick your assistant. For Claude Code, Cursor and Codex the repo is a plugin
+marketplace, so one install brings the MCP connection and both skills; the
+only thing you add by hand is your token, from your qarunbook home page under
+**Connect your AI**. The token is yours, not the workspace's. It acts as you,
+with your role, and removing you revokes exactly it.
 
-One step, and the MCP connection and both skills come with it:
+### Claude Code
 
 ```text
 /plugin marketplace add Ifeanyiejindu/qarunbook
@@ -67,50 +71,75 @@ One step, and the MCP connection and both skills come with it:
 (or from a terminal: `claude plugin marketplace add Ifeanyiejindu/qarunbook` then
 `claude plugin install qarunbook@qarunbook`)
 
-Then set your token, from your qarunbook home page under **Connect your AI**:
+Then set your token:
 
 ```bash
 export QARUNBOOK_TOKEN="qarb_…"
 ```
 
-The token is yours, not the workspace's. It acts as you, with your role, and
-removing you revokes exactly it.
+### Cursor
 
-### Updates
+Cursor installs plugins, not loose skill folders, so the repo carries a
+`.cursor-plugin` marketplace manifest. In Cursor:
 
-Open `/plugin`, choose **Marketplaces**, select **qarunbook**, and turn on
-auto-update — Claude Code checks when it starts. Or update by hand:
+1. Open **Customize** in the sidebar and choose **From GitHub Repository**
+   (or **Plugins → Add Marketplace**).
+2. Paste `https://github.com/Ifeanyiejindu/qarunbook`.
+3. Install **qarunbook**.
+4. Under **Plugins → Configure**, set `QARUNBOOK_TOKEN` to your token.
 
-```text
-/plugin marketplace update qarunbook
-/plugin update qarunbook@qarunbook
-/reload-plugins
+That is the whole install: the `qa-runbook` MCP server and both skills arrive
+together.
+
+### Codex
+
+The repo is also a Codex plugin marketplace (`.agents/plugins/marketplace.json`).
+In the shell that launches Codex:
+
+```bash
+export QARUNBOOK_TOKEN="qarb_…"
+codex plugin marketplace add Ifeanyiejindu/qarunbook
 ```
 
-### Codex, Cursor and other agents
+Then inside Codex run `/plugins`, find **qarunbook** and install it. Codex reads
+the token from the environment when it connects and sends it as a bearer token.
+Update later with `codex plugin marketplace upgrade`.
 
-Two parts: the MCP connection, and the skills.
+### Other agents — Gemini CLI, OpenCode, Cline, …
 
-**1. The skills** — works with Codex, Cursor, Gemini CLI, OpenCode, Cline and
-other agents that read `SKILL.md` files:
+Two parts: the skills, and the MCP connection.
+
+Anything that reads `SKILL.md` files can take the skills with the
+[skills](https://skills.sh) CLI:
 
 ```bash
 npx skills add Ifeanyiejindu/qarunbook --global
 ```
 
-Update them later with `npx skills update -g`.
+Update them later with `npx skills update -g`. Then connect the MCP server by
+hand: it is a Streamable HTTP server at `https://qarunbook.com/api/mcp`,
+authenticated with `Authorization: Bearer <your token>`.
 
-**2. The MCP connection.**
+### Connecting without the plugin
 
-Codex — `~/.codex/config.toml`
+If you only want the MCP connection — no skills — add the server directly.
+
+Claude Code:
+
+```bash
+claude mcp add qa-runbook --transport http https://qarunbook.com/api/mcp \
+  --header "Authorization: Bearer qarb_…"
+```
+
+Codex — `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.qa-runbook]
 url = "https://qarunbook.com/api/mcp"
-http_headers = { Authorization = "Bearer qarb_…" }
+bearer_token_env_var = "QARUNBOOK_TOKEN"
 ```
 
-Cursor — `~/.cursor/mcp.json`
+Cursor — `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -123,8 +152,33 @@ Cursor — `~/.cursor/mcp.json`
 }
 ```
 
-Any other MCP client: it is a Streamable HTTP server at
-`https://qarunbook.com/api/mcp`, authenticated with `Authorization: Bearer <your token>`.
+### Updates
+
+Claude Code: open `/plugin`, choose **Marketplaces**, select **qarunbook**, and
+turn on auto-update — Claude Code checks when it starts. Or by hand:
+
+```text
+/plugin marketplace update qarunbook
+/plugin update qarunbook@qarunbook
+/reload-plugins
+```
+
+Cursor updates marketplace plugins from its **Plugins** panel. Codex:
+`codex plugin marketplace upgrade`.
+
+### Layout, for the curious
+
+One plugin directory, `plugins/qarunbook/`, read three ways:
+
+| tool | manifest | MCP config |
+|---|---|---|
+| Claude Code | `.claude-plugin/plugin.json` | inline in the manifest |
+| Cursor | `.cursor-plugin/plugin.json` | `mcp.json` (token from the plugin variable) |
+| Codex | `.codex-plugin/plugin.json` | `.codex-plugin/mcp.json` (`bearer_token_env_var`) |
+
+The skills themselves live once, in `plugins/qarunbook/skills/`, and follow the
+[Agent Skills](https://agentskills.io) format, so any agent that reads
+`SKILL.md` can use them unchanged.
 
 ## The two skills
 

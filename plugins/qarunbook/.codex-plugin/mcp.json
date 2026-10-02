@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "qa-runbook": {
+      "type": "streamable-http",
+      "url": "https://qarunbook.com/api/mcp",
+      "bearer_token_env_var": "QARUNBOOK_TOKEN"
+    }
+  }
+}

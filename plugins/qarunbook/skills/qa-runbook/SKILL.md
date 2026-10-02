@@ -185,5 +185,5 @@ first, and confirm the refusal is a refusal and not an absence.
 
 At the end of a sweep, offer to write an app-specific skill capturing what you learned: the URLs,
 the account recipe, the gotchas that cost you a false finding, the blockers that need the owner.
-That's what makes the next run cheap. `~/.claude/skills/<app>-qa/SKILL.md`, same shape as this
+That's what makes the next run cheap. Save it where your agent reads skills — `.agents/skills/<app>-qa/SKILL.md` in the repo, or `.claude/skills/`, `.cursor/skills/`, `.codex/skills/` — same shape as this
 one, with the specifics filled in.

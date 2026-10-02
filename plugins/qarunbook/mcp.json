@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "qa-runbook": {
+      "url": "https://qarunbook.com/api/mcp",
+      "headers": { "Authorization": "Bearer ${QARUNBOOK_TOKEN}" }
+    }
+  }
+}
