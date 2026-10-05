@@ -15,6 +15,12 @@ write one.
 
 ## 1. Establish what you're testing
 
+**Coming straight from the test-checklist skill?** The plan was just put into qarunbook
+and you already know the app — skip choosing it and go to the rest of this section.
+
+**No plan in qarunbook yet?** Nothing to run. Use the test-checklist skill first to write
+the plan and put it in qarunbook, then come back here.
+
 `list_apps` first — it names every app the runbook holds. If exactly one matches what the user
 asked for, use it. If several could, or none obviously does, ask.
 

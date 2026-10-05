@@ -184,7 +184,7 @@ The skills themselves live once, in `plugins/qarunbook/skills/`, and follow the
 
 | | |
 |---|---|
-| **`/test-checklist`** | Reads the app's code and works out what is worth testing — every module, feature and journey, on each platform it ships on. Writes them as steps a non-technical tester can follow, and creates the app in your runbook with the checks already in it. |
+| **`/test-checklist`** | Reads the app's code and works out what is worth testing — every module, feature and journey, on each platform it ships on. Writes them as steps a non-technical tester can follow, puts it into your runbook (a new app, or the missing checks added to an existing one), then offers to start testing it straight away. |
 | **`/qa-runbook`** | Runs the testing. Establishes what is under test, creates real accounts, drives web and mobile, records each result with evidence, and verifies fixes. |
 
 Neither is required. You can write the plan by hand, upload a markdown file, or

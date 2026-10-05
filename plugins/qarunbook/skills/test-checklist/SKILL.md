@@ -1,6 +1,6 @@
 ---
 name: test-checklist
-description: Build a complete QA test plan for an app — every module, feature and user journey, across each platform it runs on. Use when asked for a test plan, QA checklist, test cases, regression suite, or "what should we test", or when preparing an app for QA, a release or a demo. Produces markdown that imports directly into a qarunbook runbook.
+description: Build a complete QA test plan for an app — every module, feature and user journey, across each platform it runs on. Use when asked for a test plan, QA checklist, test cases, regression suite, or "what should we test", or when preparing an app for QA, a release or a demo. Writes the plan, puts it into qarunbook (creating the app, or adding to it), then offers to start testing it straight away.
 ---
 
 # Building a test checklist
@@ -89,13 +89,10 @@ Open with:
 
 Then the parts. Use tables; keep the steps short enough to read on a phone.
 
-## Importing it into the runbook
+## Format rules for the importer
 
-qarunbook (https://qarunbook.com) imports this format directly — upload the
-`.md`, or pass it to the `import_plan` MCP tool, and it creates an app, with sections from the
-headings, checks from the table rows, and platforms read from the check table's
-header.
-
+qarunbook (https://qarunbook.com) reads this format directly: sections from the
+headings, checks from the table rows, and platforms from the check table's header.
 For that to work:
 
 - Each section is a `##` heading, with its checks in one table beneath it.
@@ -121,8 +118,48 @@ establish — never omit it.
 - Both roles covered for every module that has two.
 - Known platform gaps listed up front.
 - Recently-fixed bugs have a journey that would catch them again.
+- It is in qarunbook (below), not only in the repo.
 
 State plainly that the plan describes what the app **does**, derived from the
 code — not necessarily what was intended. Where those differ, the plan encodes
 current behaviour, and the sections covering recently-changed areas are worth a
 product owner's eye before testers work from them.
+
+## Put it in qarunbook — always, without being asked
+
+A plan that only exists as a markdown file is not finished. **Writing the file is not
+the end of this skill: the plan goes into qarunbook in the same run**, so the team can
+start working through it. Do not stop at the file and do not wait to be asked.
+
+If the `qa-runbook` MCP tools are connected:
+
+1. `list_apps`, to see whether this app is already in the runbook.
+2. **Not there:** `import_plan` with the app's name and the whole markdown file as
+   `markdown`. One call creates the app, its sections, its checks and its platforms.
+3. **Already there:** do not create a second copy under another name. `list_checks`
+   for that app, then add what is missing — `add_section` for a new area,
+   `add_check` for each journey the runbook does not have yet (with its steps,
+   expected result, preconditions and `not_applicable_on`). Leave existing checks
+   and their results alone. If the existing app turns out to be a different product
+   that only shares the name, ask before touching it.
+4. Read back what was created — sections, check count, platforms — and confirm it
+   matches the file. If the import refused anything, fix the file and import again;
+   do not report success on a partial import.
+
+If the MCP tools are not connected, say so plainly, and tell the user the two ways
+to get the plan in: in qarunbook choose **Add an app**, then **Use our template**,
+and upload `docs/qa-test-plan.md` under "Upload it filled in"; or connect the MCP
+server (https://qarunbook.com/guides/qa-mcp-server) and run this step again.
+
+## Then offer to run it
+
+Finish by telling the user what is now in qarunbook — the app, how many sections
+and checks, which platforms — and **ask whether they want to start testing now**
+with the `qa-runbook` skill. For example:
+
+> The plan is in qarunbook as "Acme Shop": 14 sections, 212 checks, on web,
+> Android and iOS. Want me to start running it now with the qa-runbook skill?
+> I can take the whole plan, one section, or one platform.
+
+If they say yes, start the `qa-runbook` skill straight away on that app. You
+already know which app it is, so do not ask again.
