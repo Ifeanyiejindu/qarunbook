@@ -136,12 +136,23 @@ If the `qa-runbook` MCP tools are connected:
 1. `list_apps`, to see whether this app is already in the runbook.
 2. **Not there:** `import_plan` with the app's name and the whole markdown file as
    `markdown`. One call creates the app, its sections, its checks and its platforms.
-3. **Already there:** do not create a second copy under another name. `list_checks`
-   for that app, then add what is missing — `add_section` for a new area,
-   `add_check` for each journey the runbook does not have yet (with its steps,
-   expected result, preconditions and `not_applicable_on`). Leave existing checks
-   and their results alone. If the existing app turns out to be a different product
-   that only shares the name, ask before touching it.
+3. **Already there:** do not create a second copy under another name, and never
+   write its existing checks again. Call `code_sources` for that app first: it
+   lists the app's platforms, the GitHub repositories connected to it (and which
+   platforms each builds), and every check it already has. Read the code you were
+   pointed to — those repositories, or the folders on this computer the person
+   names — and decide which platforms it builds. Then:
+   - For each of those platforms, one `apply_platform` call: the existing checks
+     whose feature is in this code too go in `on`, the ones whose feature isn't go
+     in `off` (marked N/A there). Pass `label` when the app doesn't have the
+     platform yet; it is added. A web app read after the mobile one ends with the
+     shared checks on web too and the mobile-only ones N/A on web.
+   - Write only what this code has that the existing checks don't cover, as a plan
+     in the format above, and `import_plan` it with `app` set (no `name`). A section
+     with an existing section's exact name adds its checks there; a check only on
+     the new platform is N/A on the others.
+   Leave existing checks' wording and results alone. If the existing app turns out
+   to be a different product that only shares the name, ask before touching it.
 4. Read back what was created — sections, check count, platforms — and confirm it
    matches the file. If the import refused anything, fix the file and import again;
    do not report success on a partial import.
