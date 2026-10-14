@@ -92,19 +92,11 @@ double-prefixing produces 401s that look exactly like a correct refusal.
 
 ## 4. Driving the surfaces
 
-**Let Midscene drive, when you can.** Midscene's skills let you see and operate a real UI —
-a browser, an Android or iOS device, a HarmonyOS phone, or a desktop app — from the command
-line: you look at a screenshot, decide, and act, the way a person tests. Check whether they are
-among your skills (their names start with `midscene`). If they are not, offer to install them:
-
-```bash
-npx skills add web-infra-dev/midscene-skills            # any agent; add -a claude-code for Claude Code
-```
-
-They need a vision model set in the environment: `MIDSCENE_MODEL_API_KEY`,
-`MIDSCENE_MODEL_NAME`, `MIDSCENE_MODEL_BASE_URL`, `MIDSCENE_MODEL_FAMILY`. For web, the
-`--bridge` mode drives the person's own Chrome, already signed in — ask before using it, and
-never change their account. Record every result in qarunbook as below, whichever way you drove.
+**Use the real UI, the way a person tests.** Drive the app with the browser and device tools you
+already have — a browser you can see and click, an iOS simulator or Android emulator, a phone the
+person has connected — look at the screen, decide, and act. A person's own browser is signed in as
+them: ask before using it, and never change their account. Record every result in qarunbook as
+below, whichever way you drove.
 
 **Or let qarunbook's AI tester run it.** Where the person's qarunbook shows "Run with AI" on an
 app, its own tester can run the checks on a browser, emulator, simulator or phone and record
