@@ -104,6 +104,41 @@ One thing to avoid: a legend table early in the document explaining the columns.
 The importer skips tables whose rows are not checks, but a legend is still noise —
 prefer a plain list.
 
+## API checks (a backend)
+
+When the app has a backend, give it an **API** platform (code `API`) and write its checks as
+requests, so qarunbook runs them itself — no browser, in seconds, free. The other platforms are
+N/A on these checks, and the API platform is N/A on screen checks.
+
+Steps are request lines, each with what goes with it; the expected result is lines about the last
+response:
+
+```
+Steps:
+1. POST /auth/login
+   Body {"email": "{{email}}", "password": "{{password}}"}
+   Expect status 200
+   Save data.token as token
+2. GET /me
+   Header Authorization: Bearer {{token}}
+Expected:
+Status 200
+data.email equals {{email}}
+Within 800 ms
+```
+
+- Paths go after the platform's base address; `{{name}}` comes from the platform's variables
+  (test account, token), from `Save … as name` in an earlier step or check, or is built in:
+  `{{email}}` (a fresh test inbox address), `{{random}}`, `{{timestamp}}`, `{{uuid}}`.
+- `Save email code as otp` waits for the code mailed to `{{email}}`.
+- Expectations it checks exactly: `Status 200` / `Status 4xx`, `Within 800 ms`,
+  `a.b exists` / `is missing` / `equals x` / `contains x` / `is an array` / `has at least 1 item`,
+  `header x contains y`, `body contains x`. Anything else, in plain words, is judged by AI.
+- For every protected endpoint, add the matching refusal: the same request without the token,
+  expecting `Status 401` (or `Status 4xx`) — and, where data is per user, someone else's id.
+- An app with an OpenAPI/Swagger document can have these made for it: App configuration →
+  Test configuration → the API platform → *Checks from your OpenAPI document*.
+
 ## Scale
 
 Be exhaustive rather than tidy. A real product runs to a few hundred journeys; a
