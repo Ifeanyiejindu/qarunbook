@@ -68,11 +68,17 @@ used, so the account can be found again later.
 
 Creating one, the usual shape:
 
-1. `POST` the signup endpoint.
-2. If the app requires email verification, you need the code. **Plus-aliasing is the trick that
-   usually works**: `you+qa123@gmail.com` delivers to `you@gmail.com`, so the verification email
-   is readable with the Gmail/mail tools available to you. This avoids touching the database.
-3. Verify, then log in and keep the token.
+1. Get an address from the app's **test inbox**: `test_email_address` gives a fresh one
+   (`test+…@in.qarunbook.com`) each time — one per account, since apps refuse an email they
+   have seen.
+2. Sign up with it — through the form, or `POST` the signup endpoint.
+3. If the app emails a code or a link, read it with `read_test_email` (`to` = the address,
+   `after` = when you signed up, `wait_seconds` ≈ 60). It returns the codes and links already
+   picked out. No mailbox of the person's is touched, and nothing is written to the database.
+4. Verify, then log in and keep the token.
+
+Password resets and invitations work the same way: send them to a test address and read it
+back. People on the app see the same inbox in qarunbook (the app's **Test inbox** button).
 
 Check what signup fixes permanently — country, currency, plan, locale often can't be changed
 later, so create the account you actually need.
@@ -152,8 +158,8 @@ real paths.** Not HTTP calls standing in for a screen, not signed-out pages only
 posted to it by the main session. An agent that does less than a person doing that section by
 hand is worth nothing — the point of the sweep is that the application was actually used.
 
-So each agent's prompt carries the §3 account recipe — signup call, the plus-alias inbox to read
-the code from, verify, log in — and the agent runs it. Its own account, its own session, so
+So each agent's prompt carries the §3 account recipe — a test inbox address of its own, sign up,
+read the code with `read_test_email`, verify, log in — and the agent runs it. Its own account, its own session, so
 agents never collide over one login. §4 has what signing in through a web form needs (the native
 setter, then the click); a form is filled, not skipped.
 
