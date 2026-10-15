@@ -98,6 +98,18 @@ person has connected — look at the screen, decide, and act. A person's own bro
 them: ask before using it, and never change their account. Record every result in qarunbook as
 below, whichever way you drove.
 
+**Or drive a connected computer through qarunbook.** When the person has a computer connected to
+their qarunbook workspace (the qarunbook helper, under Test configuration → Computers), you can test
+on its devices without any browser or device tools of your own: `start_device` (app, platform code)
+opens the app there — a browser at the platform's own screen size (phone, tablet or desktop), an
+Android emulator or plugged-in phone, or an iPhone simulator — and returns a screenshot. Then look
+and act with `device_action`: `tap` (x, y in the screenshot's pixels), `type` (into what has focus —
+tap the field first), `key` (Enter, Backspace, Tab), `scroll`, `swipe`, `back`, `open` (a link), `wait`,
+`screenshot`. Every action returns the screen after it. Read codes and links with `read_test_email`,
+record each check with `set_result` as you go, and `end_device` when done. The person watches it live
+in qarunbook. If the app's Test configuration says it is tested by "Your AI assistant", this is the
+way: qarunbook's own AI tester is switched off for it, and nothing is taken from their AI credit.
+
 **Or let qarunbook's AI tester run it.** Where the person's qarunbook shows "Run with AI" on an
 app, its own tester can run the checks on a browser, emulator, simulator or phone and record
 them, with a screenshot and a replay on each result. Offer that for long sweeps.
