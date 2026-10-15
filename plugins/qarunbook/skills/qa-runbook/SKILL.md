@@ -63,6 +63,15 @@ There are two ways to be signed in, and one of them must be settled before anyth
 login is tested: **an account the user gives you**, or **one you create yourself**. Never test
 from a real customer's account, and never guess credentials.
 
+**Check the app's saved test accounts first:** `test_accounts` (app) lists the logins the team keeps
+for testing — an admin, a seeded customer — each with its username and a note on when to use it.
+When a check needs that kind of account, use it. Passwords are never returned: on a device opened
+with `start_device`, tap the username field and `device_action` `type_account` (account, field
+`username`), then the password field and `type_account` (field `password`) — qarunbook types the
+saved password for you. With your own browser tools, ask the person to sign in for you instead.
+An admin can save accounts with `set_test_account` (e.g. the ones a seed script creates); checks
+about signing up still make a fresh account.
+
 Ask for credentials in the §1 batch. If none are offered, create one — and say which address you
 used, so the account can be found again later.
 
@@ -104,8 +113,8 @@ on its devices without any browser or device tools of your own: `start_device` (
 opens the app there — a browser at the platform's own screen size (phone, tablet or desktop), an
 Android emulator or plugged-in phone, or an iPhone simulator — and returns a screenshot. Then look
 and act with `device_action`: `tap` (x, y in the screenshot's pixels), `type` (into what has focus —
-tap the field first), `key` (Enter, Backspace, Tab), `scroll`, `swipe`, `back`, `open` (a link), `wait`,
-`screenshot`. Every action returns the screen after it. Read codes and links with `read_test_email`,
+tap the field first), `type_account` (a saved test account's username or password, typed for you — §3), `key` (Enter,
+Backspace, Tab), `scroll`, `swipe`, `back`, `open` (a link), `wait`, `screenshot`. Every action returns the screen after it. Read codes and links with `read_test_email`,
 record each check with `set_result` as you go, and `end_device` when done. The person watches it live
 in qarunbook. If the app's Test configuration says it is tested by "Your AI assistant", this is the
 way: qarunbook's own AI tester is switched off for it, and nothing is taken from their AI credit.
