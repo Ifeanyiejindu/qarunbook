@@ -26,6 +26,11 @@ testers do not report deliberate differences as defects.
 
 If the product has an existing plan, read it first and extend rather than replace.
 
+**The code isn't on this computer?** When the app's GitHub repositories are connected in qarunbook,
+read them through it: `code_sources` names them (and which platforms each builds), `repo_files`
+lists their source files, and `read_repo_file` reads one. Walk them exactly as you would a local
+checkout — routes, screens, modules, controllers — and build the plan from what is there.
+
 ## Structure
 
 **Part → Section → Journey**, with a result column per platform.
