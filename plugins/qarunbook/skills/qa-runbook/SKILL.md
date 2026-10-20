@@ -65,10 +65,10 @@ from a real customer's account, and never guess credentials.
 
 **Check the app's saved test accounts first:** `test_accounts` (app) lists the logins the team keeps
 for testing — an admin, a seeded customer — each with its username and a note on when to use it.
-When a check needs that kind of account, use it. Passwords are never returned: on a device opened
-with `start_device`, tap the username field and `device_action` `type_account` (account, field
-`username`), then the password field and `type_account` (field `password`) — qarunbook types the
-saved password for you. With your own browser tools, ask the person to sign in for you instead.
+When a check needs that kind of account, the automated tests sign in with it by name (§4).
+Passwords are never returned: on a device opened with `start_device` for a check done by hand, tap
+the username field and `device_action` `type_account` (account, field `username`), then the
+password field and `type_account` (field `password`) — qarunbook types the saved password for you.
 An admin can save accounts with `set_test_account` (e.g. the ones a seed script creates); checks
 about signing up still make a fresh account.
 
@@ -99,34 +99,36 @@ and let the account owner decide.
 Watch how the API returns its token: some already include the `Bearer ` prefix, and
 double-prefixing produces 401s that look exactly like a correct refusal.
 
-## 4. Driving the surfaces
+## 4. Running the tests
 
-**A check's saved tests come first.** When `get_check` shows `automated`, read it with
-`check_scripts`: it is the exact Playwright test or Maestro flow for that check. Follow it — it
-names the real buttons — and when the app no longer matches it (a renamed button, a new step),
-fix it with `set_check_scripts` after recording the result, so the next run needs no AI.
+**The automated tests do the testing, not you.** Every check comes with an automated test written
+with the checklist — a Playwright test for web, a Maestro flow for phones — and qarunbook runs them
+exactly as written, with no AI driving:
 
-**Use the real UI, the way a person tests.** Drive the app with the browser and device tools you
-already have — a browser you can see and click, an iOS simulator or Android emulator, a phone the
-person has connected — look at the screen, decide, and act. A person's own browser is signed in as
-them: ask before using it, and never change their account. Record every result in qarunbook as
-below, whichever way you drove.
+1. `run_tests` (app, platform code; optionally `refs` or `section`) starts the run on the
+   workspace's connected computer, or qarunbook's cloud for web. A check with no test gets one
+   written first; a test the app outgrew is rewritten from the screen and run again.
+2. `run_results` (the run id) shows each check as it ends: passed, failed (an issue is raised),
+   couldn't check (with why — usually a saved login or test data to fix), or still to come. Call it
+   again until it says done, then report the numbers and the fails.
 
-**Or drive a connected computer through qarunbook.** When the person has a computer connected to
-their qarunbook workspace (the qarunbook helper, under Test configuration → Computers), you can test
-on its devices without any browser or device tools of your own: `start_device` (app, platform code)
-opens the app there — a browser at the platform's own screen size (phone, tablet or desktop), an
-Android emulator or plugged-in phone, or an iPhone simulator — and returns a screenshot. Then look
-and act with `device_action`: `tap` (x, y in the screenshot's pixels), `type` (into what has focus —
-tap the field first), `type_account` (a saved test account's username or password, typed for you — §3), `key` (Enter,
-Backspace, Tab), `scroll`, `swipe`, `back`, `open` (a link), `wait`, `screenshot`. Every action returns the screen after it. Read codes and links with `read_test_email`,
-record each check with `set_result` as you go, and `end_device` when done. The person watches it live
-in qarunbook. If the app's Test configuration says it is tested by "Your AI assistant", this is the
-way: qarunbook's own AI tester is switched off for it, and nothing is taken from their AI credit.
+Results are recorded by the run itself: do not `set_result` them again.
 
-**Or let qarunbook's AI tester run it.** Where the person's qarunbook shows "Run with AI" on an
-app, its own tester can run the checks on a browser, emulator, simulator or phone and record
-them, with a screenshot and a replay on each result. Offer that for long sweeps.
+**Only a check marked as not automatable is done by hand.** `check_scripts` says `left_to_people`
+for those (how something looks, a camera, a real payment, a second person). For one of them,
+`start_device` (app, platform code, `ref`) opens the app on a connected computer and returns a
+screenshot; act with `device_action`: `tap` (x, y in the screenshot's pixels), `type` (into what
+has focus — tap the field first), `type_account` (a saved test account's username or password,
+typed for you — §3), `key` (Enter, Backspace, Tab), `scroll`, `swipe`, `back`, `open` (a link),
+`wait`, `screenshot`. Read codes and links with `read_test_email`, record the check with
+`set_result`, and `end_device` when done. A check that needs something nobody automated has (a
+real card, a second phone) stays untested, saying why.
+
+**A test that keeps failing for the wrong reason** (a renamed button the run could not fix, a
+login that changed): read it with `check_scripts`, fix it with `set_check_scripts`, and run it
+again with `run_tests`. Fix the test, never mark the check by hand.
+
+**Tips for the checks done by hand.**
 
 **Web.** Login forms built on React controlled inputs ignore a plain `.value` set — use the
 native setter and dispatch the events:
@@ -169,37 +171,20 @@ say so explicitly in your report rather than quietly re-marking a cell you did n
 
 ## 6. Fanning out
 
-Run several agents in parallel across *different* sections.
+**Runs fan out by themselves.** Start `run_tests` once per platform (WL, WM, AND, IOS…): they run
+side by side on the workspace's computers and qarunbook's cloud, each check its own test. No agents
+are needed to test in parallel.
 
-**Every agent does the whole job itself: makes its own test account, signs in, and tests the
-real paths.** Not HTTP calls standing in for a screen, not signed-out pages only, not a token
-posted to it by the main session. An agent that does less than a person doing that section by
-hand is worth nothing — the point of the sweep is that the application was actually used.
+**One actor per device.** A simulator or emulator is a single, shared, stateful thing: while a run
+or a `start_device` session is using it, nothing else touches it. Do the hand-done checks after the
+run on that platform has finished.
 
-So each agent's prompt carries the §3 account recipe — a test inbox address of its own, sign up,
-read the code with `read_test_email`, verify, log in — and the agent runs it. Its own account, its own session, so
-agents never collide over one login. §4 has what signing in through a web form needs (the native
-setter, then the click); a form is filled, not skipped.
+**"I could not log in" is not a result.** A run that says couldn't check because a saved login or
+test data is wrong names it: fix the account (`set_test_account`) or the data, then run those
+checks again with `run_tests` and `refs`.
 
-**One actor per device, though.** Accounts scale; a simulator or emulator does not. It is a
-single, shared, stateful thing. On 19 Sep the main session and a dispatched agent drove the same
-iPhone simulator at once and each kept landing on the other's screen — observations from a device
-two actors are touching are worth nothing, and you cannot tell your own stale dialog from theirs.
-Decide up front who owns each device and keep that device's work in one place.
-
-**"I could not log in" is not a result, and neither is "covered at the API level".** A check
-behind a login is tested behind that login, on the surface the check names. If an agent truly
-cannot reach something, it says exactly what it tried and what stopped it, and that check stays
-unrecorded for someone to take — but that is a failure to be fixed, not a normal outcome.
-
-Every agent prompt should carry: the exact check refs, the base URL, the account recipe, the
-app's gotchas, "create your own account and sign in — do not report anything as blocked on
-login", "do not mark anything passing you did not observe", and "do not commit or push". Ask for
-what they ruled out, not just what they found.
-
-**Read what an agent refused to conclude.** Those notes are usually right, and the gap they name
-is usually the actual remaining work. Verify an agent's headline claim before acting on it — the
-observation is normally sound, the conclusion drawn from it sometimes isn't.
+**Read what a run refused to conclude.** A couldn't check names the real remaining work; report it
+plainly rather than marking anything by hand.
 
 ## 7. Finding real causes
 
