@@ -202,6 +202,22 @@ to get the plan in: in qarunbook choose **Add an app**, then **Use our template*
 and upload `docs/qa-test-plan.md` under "Upload it filled in"; or connect the MCP
 server (https://qarunbook.com/guides/qa-mcp-server) and run this step again.
 
+## Then write its automated tests
+
+Each check should also come with automated tests, so it can be run again and again with no AI:
+a **Playwright** test for its web platforms and a **Maestro** flow for its phone ones. qarunbook
+runs them first and only asks an AI when one does not pass.
+
+- If the app's checklists are written by qarunbook's AI or the person's own key, qarunbook writes
+  them itself: tell the person to press **Write automated tests** (App configuration, Checks).
+- If **you** write the checklists (the person's own assistant), write them yourself from the code,
+  a section at a time, and save each with `set_check_scripts` (the tool's description has the
+  exact format). Use the app's real button and field names from the code, `qa.account('Name')` for
+  saved logins (never a password in a test), `qa.email()` / `qa.emailCode()` for the test inbox,
+  `qa.unique('x')` for names that must not repeat, and `qa.saveAccount('Verified user', …)` when a
+  check finishes making a new account. Mark a check `manual_why` only when it truly cannot be
+  automated (a real payment, a camera, a second device, an OS setting, a judgement of looks).
+
 ## Then offer to run it
 
 Finish by telling the user what is now in qarunbook — the app, how many sections

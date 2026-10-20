@@ -101,6 +101,11 @@ double-prefixing produces 401s that look exactly like a correct refusal.
 
 ## 4. Driving the surfaces
 
+**A check's saved tests come first.** When `get_check` shows `automated`, read it with
+`check_scripts`: it is the exact Playwright test or Maestro flow for that check. Follow it — it
+names the real buttons — and when the app no longer matches it (a renamed button, a new step),
+fix it with `set_check_scripts` after recording the result, so the next run needs no AI.
+
 **Use the real UI, the way a person tests.** Drive the app with the browser and device tools you
 already have — a browser you can see and click, an iOS simulator or Android emulator, a phone the
 person has connected — look at the screen, decide, and act. A person's own browser is signed in as
