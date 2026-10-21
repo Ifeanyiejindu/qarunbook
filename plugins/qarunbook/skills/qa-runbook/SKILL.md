@@ -101,13 +101,16 @@ double-prefixing produces 401s that look exactly like a correct refusal.
 
 ## 4. Running the tests
 
-**The automated tests do the testing, not you.** Every check comes with an automated test written
-with the checklist — a Playwright test for web, a Maestro flow for phones — and qarunbook runs them
-exactly as written, with no AI driving:
+**The automated tests do the testing, not you.** Every check comes with automated tests written
+from the app's code, in the test tools the app has switched on (`automated_tests` says which):
+Playwright and/or Cypress for web, Maestro for phones. qarunbook runs them exactly as written,
+with no AI driving:
 
 1. `run_tests` (app, platform code; optionally `refs` or `section`) starts the run on the
-   workspace's connected computer, or qarunbook's cloud for web. A check with no test gets one
-   written first; a test the app outgrew is rewritten from the screen and run again.
+   workspace's connected computer, or qarunbook's cloud for Playwright on web. Cypress runs on a
+   connected computer (it sets Cypress up there the first time). A check with no test gets one
+   written first; a test the app outgrew is rewritten from the screen and run again. A platform
+   with no test tool switched on can't be run: its checks are for people.
 2. `run_results` (the run id) shows each check as it ends: passed, failed (an issue is raised),
    couldn't check (with why — usually a saved login or test data to fix), or still to come. Call it
    again until it says done, then report the numbers and the fails.

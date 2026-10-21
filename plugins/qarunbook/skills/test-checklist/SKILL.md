@@ -204,19 +204,25 @@ server (https://qarunbook.com/guides/qa-mcp-server) and run this step again.
 
 ## Then write its automated tests
 
-Each check should also come with automated tests, so it can be run again and again with no AI:
-a **Playwright** test for its web platforms and a **Maestro** flow for its phone ones. qarunbook
-runs them first and only asks an AI when one does not pass.
+Each check should also come with automated tests, so it can be run again and again with no AI —
+in the **test tools the app has switched on**: Playwright and/or Cypress for its web platforms,
+Maestro for its phone apps. They are independent: a team that uses Cypress gets Cypress tests of
+their own, not a copy of Playwright's. Call `automated_tests` (app) to see which are on, or to
+switch one on when the person asks (Test configuration → Automated tests in the app). With none
+on, the checklist is for people only: write no tests.
 
 - If the app's checklists are written by qarunbook's AI or the person's own key, qarunbook writes
-  them itself: tell the person to press **Write automated tests** (App configuration, Checks).
+  them itself — a checklist written from the code comes with its tests, and **Write … tests from
+  the code** (Test configuration → Automated tests) writes any still missing.
 - If **you** write the checklists (the person's own assistant), write them yourself from the code,
-  a section at a time, and save each with `set_check_scripts` (the tool's description has the
-  exact format). Use the app's real button and field names from the code, `qa.account('Name')` for
-  saved logins (never a password in a test), `qa.email()` / `qa.emailCode()` for the test inbox,
-  `qa.unique('x')` for names that must not repeat, and `qa.saveAccount('Verified user', …)` when a
-  check finishes making a new account. Mark a check `manual_why` only when it truly cannot be
-  automated (a real payment, a camera, a second device, an OS setting, a judgement of looks).
+  a section at a time, in each framework that is on, and save each with `set_check_scripts` (the
+  tool's description has the exact format for Playwright, Cypress and Maestro). Use the app's real
+  button and field names from the code; arrange inside `qa.setup` / `cy.qaSetup`; sign in with
+  `qa.signIn('Name')` / `cy.qaSignIn('Name')` (never a password in a test), a fresh account with
+  `qa.signUp()` / `cy.qaSignUp()`, the test inbox with `qa.email()` / `qa.emailCode()` (Cypress:
+  `cy.qaEmail()` / `cy.qaEmailCode()`), and `qa.unique('x')` / `cy.qaUnique('x')` for names that
+  must not repeat. Mark a check `manual_why` only when it truly cannot be automated (a real
+  payment, a camera, a second device, an OS setting, a judgement of looks).
 
 ## Then offer to run it
 
