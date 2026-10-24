@@ -214,15 +214,68 @@ on, the checklist is for people only: write no tests.
 - If the app's checklists are written by qarunbook's AI or the person's own key, qarunbook writes
   them itself — a checklist written from the code comes with its tests, and **Write … tests from
   the code** (Test configuration → Automated tests) writes any still missing.
-- If **you** write the checklists (the person's own assistant), write them yourself from the code,
-  a section at a time, in each framework that is on, and save each with `set_check_scripts` (the
-  tool's description has the exact format for Playwright, Cypress and Maestro). Use the app's real
-  button and field names from the code; arrange inside `qa.setup` / `cy.qaSetup`; sign in with
-  `qa.signIn('Name')` / `cy.qaSignIn('Name')` (never a password in a test), a fresh account with
-  `qa.signUp()` / `cy.qaSignUp()`, the test inbox with `qa.email()` / `qa.emailCode()` (Cypress:
-  `cy.qaEmail()` / `cy.qaEmailCode()`), and `qa.unique('x')` / `cy.qaUnique('x')` for names that
-  must not repeat. Mark a check `manual_why` only when it truly cannot be automated (a real
-  payment, a camera, a second device, an OS setting, a judgement of looks).
+- If **you** write the checklists (the person's own assistant), write the tests yourself, a
+  section at a time, in each framework that is on, and save each with `set_check_scripts` (its
+  description has the exact format for Playwright, Cypress and Maestro). Follow the method below.
+
+### The method: every test from the screen's code
+
+You have the code, so nothing about a screen is a guess: what it says, where things sit, how they
+are styled, how a person gets there. A test that taps a name the screen does not draw, or a thing
+it never scrolled to, fails on every run. Read before you write.
+
+1. **Open the screen before writing a step.** For each step, open the file that draws that screen
+   — web: the route's page and the components it renders; phones: the screen under `app/` or
+   `screens/` and its components — and the files that lead to it (links, tabs, menus,
+   `router.push`, `navigation.navigate`). Follow that path in the test. Never write from the
+   checklist's wording, a screenshot or memory.
+2. **Take each name as the code draws it.**
+   - An id first: `testID` (React Native; Maestro `id:`), `data-testid` (web; `getByTestId`,
+     `[data-testid=…]`).
+   - Otherwise the visible words, copied character for character (apostrophes, "…", capitals).
+   - Read the style as well as the words: `textTransform: 'uppercase'` or `'capitalize'`, CSS
+     `uppercase`/`text-transform`, and tab bars that capitalise their labels (Material top tabs on
+     Android) draw different letters from the source — match what is drawn (`OUTCOMES`) or use a
+     case-insensitive pattern (`(?i)outcomes`, `/outcomes/i`).
+   - Words from a translation file or an option list (`t('…')`, an options array) — look them up
+     and use the words shown.
+   - An icon-only button: its `accessibilityLabel` / `aria-label`. With neither and no id, it
+     cannot be found reliably: say so, and use an id the code does have nearby.
+3. **Know where it sits.** The code gives the order of the page. Anything inside a ScrollView,
+   FlatList or long page after other content starts off-screen: scroll to it before tapping or
+   checking it (Maestro `scrollUntilVisible`; on the web, a lazy list must be scrolled to load).
+   A bottom sheet, modal, tab or collapsed section is opened first.
+4. **Words that come from data are not in the code.** A name, amount, balance, date or count is
+   matched by its id, by the fixed words beside it, or by a pattern (`₦[0-9,.]+`, `/\d+ results/`) —
+   never by a value you happened to see. Text shown only in some states (an empty list, a funded
+   or verified account) needs that state: make it in setup, or use a saved account that has it.
+5. **Platforms differ in the code, so the tests do too.** `Platform.OS`, `.ios.tsx` /
+   `.android.tsx` files and separate mobile web components draw different things: write for what
+   each platform draws. One phone flow serves Android and iOS only where the code is the same.
+6. **Wait for what loads.** After a step that fetches data, wait for the element the next step
+   needs (`extendedWaitUntil`, `expect(…).toBeVisible({ timeout })`, `.should('be.visible')`) —
+   never a fixed sleep.
+7. **Sign in the saved way, arrange in setup, check exactly the expected result.**
+   `qa.signIn('Name')` / `cy.qaSignIn('Name')`; on phones `runFlow: ../qarunbook/sign-in.yaml`
+   with the account's variables when the app has a saved phone sign-in (`test_accounts` says), else
+   `${ACCOUNT_<NAME>_USERNAME}` / `_PASSWORD`. A fresh account with `qa.signUp()` /
+   `cy.qaSignUp()`, the test inbox with `qa.email()` / `qa.emailCode()` (Cypress `cy.qaEmail()` /
+   `cy.qaEmailCode()`; Maestro `${TEST_EMAIL}` and `../qarunbook/email-code.js`), and
+   `qa.unique('x')` / `cy.qaUnique('x')` / `${UNIQUE}` for names that must not repeat. Arrange
+   inside `qa.setup` / `cy.qaSetup`. Never a password in a test. Mark a check `manual_why` only when
+   it truly cannot be automated (a real payment, a camera, a second device, an OS setting, a
+   judgement of looks).
+
+### Prove them before writing the rest
+
+A test that has never run has never passed. After the first three tests of a section, save them
+and run them: `run_tests` (app, platform, `refs`) on each platform, then `run_results`. A test
+that stopped because it could not find something is your mistake, not the app's — read that
+screen's code again, find what you got wrong, and fix the same thing in every test of the section
+before writing more. Only then write the rest, and run the section once it is saved.
+
+When nothing can run them (no connected computer, the device is busy), save them and tell the
+person plainly which sections' tests have not been proven yet.
 
 ## Then offer to run it
 
