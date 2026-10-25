@@ -245,6 +245,11 @@ it never scrolled to, fails on every run. Read before you write.
    FlatList or long page after other content starts off-screen: scroll to it before tapping or
    checking it (Maestro `scrollUntilVisible`; on the web, a lazy list must be scrolled to load).
    A bottom sheet, modal, tab or collapsed section is opened first.
+   **Every screen on the path, including the ones in between.** The code shows each sheet, dialog
+   or prompt that appears along the way and when: an "Are you sure?" after a skip, an
+   onboarding or permission prompt, a cookie banner. Handle each one, or the test stops there.
+   (Sabi, Oct 2026: every sign-up test stopped at the "Are you sure about this?" sheet that
+   follows "I'll do it later", because the tests went straight to the next screen.)
 4. **Words that come from data are not in the code.** A name, amount, balance, date or count is
    matched by its id, by the fixed words beside it, or by a pattern (`₦[0-9,.]+`, `/\d+ results/`) —
    never by a value you happened to see. Text shown only in some states (an empty list, a funded
@@ -252,10 +257,14 @@ it never scrolled to, fails on every run. Read before you write.
 5. **Platforms differ in the code, so the tests do too.** `Platform.OS`, `.ios.tsx` /
    `.android.tsx` files and separate mobile web components draw different things: write for what
    each platform draws. One phone flow serves Android and iOS only where the code is the same.
-6. **Wait for what loads.** After a step that fetches data, wait for the element the next step
+6. **A value a flow saves must exist before it is used.** A `copyTextFrom` / `evalScript` value
+   (`${output.x}`) that was never set is `undefined`, and the flow then looks for the word
+   "undefined": qarunbook counts that test as broken. Save the value on a step that is sure to
+   run, and test the script once on a device.
+7. **Wait for what loads.** After a step that fetches data, wait for the element the next step
    needs (`extendedWaitUntil`, `expect(…).toBeVisible({ timeout })`, `.should('be.visible')`) —
    never a fixed sleep.
-7. **Sign in the saved way, arrange in setup, check exactly the expected result.**
+8. **Sign in the saved way, arrange in setup, check exactly the expected result.**
    `qa.signIn('Name')` / `cy.qaSignIn('Name')`; on phones `runFlow: ../qarunbook/sign-in.yaml`
    with the account's variables when the app has a saved phone sign-in (`test_accounts` says), else
    `${ACCOUNT_<NAME>_USERNAME}` / `_PASSWORD`. A fresh account with `qa.signUp()` /

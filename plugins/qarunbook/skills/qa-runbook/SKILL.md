@@ -117,6 +117,24 @@ with no AI driving:
 
 Results are recorded by the run itself: do not `set_result` them again.
 
+**What each result means.** A result from a test stands on its own:
+- **Passed / failed:** what the test saw. A fail is a fail even with no AI involved; an issue is
+  raised for it.
+- **Couldn't check, test needs regenerating:** the test is broken, not the app. Maestro could not
+  read the flow, the flow looked for "undefined" (a value it never set), or it could not find
+  something the screen no longer draws. The check stays untested; fix the test (below).
+- **Couldn't check, could not get to its start:** the saved sign-in did not finish (a field or
+  the signed-in screen never appeared). Fix the account or the saved sign-in, not the check's test.
+- **Error:** the device or the test tool broke (Maestro crashed, the emulator stopped). Nothing
+  was tested; run those checks again.
+- **The same fail on many checks** at one step (a sheet that never opens, an expected word that
+  never shows) is one cause: usually the test account's data (an identity check not done, no
+  money, no positions) or a screen the tests do not expect. Find that one cause first.
+
+While a run goes, the runbook shows it to anyone looking: "Testing now" on the check under way,
+"Already tested · skipped" on checks the run passes over (they already have a result there), and
+a bar with the run's progress.
+
 **Only a check marked as not automatable is done by hand.** `check_scripts` says `left_to_people`
 for those (how something looks, a camera, a real payment, a second person). For one of them,
 `start_device` (app, platform code, `ref`) opens the app on a connected computer and returns a
@@ -184,6 +202,26 @@ are needed to test in parallel.
 **One actor per device.** A simulator or emulator is a single, shared, stateful thing: while a run
 or a `start_device` session is using it, nothing else touches it. Do the hand-done checks after the
 run on that platform has finished.
+
+**One phone test session per computer.** Every copy of Maestro on a computer talks to its device
+over the same port, so a second Maestro — your own `maestro test`, a Maestro MCP, another
+assistant's run, even on a different emulator — breaks the checks of a qarunbook run going there
+(Oct 2026: two Sabi checks failed this way when another session started its own emulator and
+Maestro). Before starting phone testing of your own on a computer, make sure no qarunbook phone run
+is going on it (`run_results`, or the runbook's "Testing now"); wait for it, or use another
+computer.
+
+**Where phone tests run.** Lightest first, for computers that are not powerful or are busy:
+- **Your own phone**, plugged in: almost nothing runs on the computer.
+- **Limrun**: phones in the cloud, nothing installed.
+- **Light Android**: Android 13 in a container, about 1 GB of memory instead of 3+, ready in
+  seconds once set up (about 15 minutes the first time). Its results matched a full emulator's.
+  It has no Google Play services: not for Google sign-in or push notifications. On a Mac it needs
+  `brew install colima docker`; the helper does the rest.
+- **A full emulator or simulator**: the heaviest; needed for Google sign-in, push, and iPhone
+  simulators (Macs only).
+The person chooses this in Run tests (or Test configuration) for each platform; suggest the
+lightest one that can test what the app needs.
 
 **"I could not log in" is not a result.** A run that says couldn't check because a saved login or
 test data is wrong names it: fix the account (`set_test_account`) or the data, then run those
