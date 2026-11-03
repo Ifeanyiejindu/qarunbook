@@ -211,12 +211,36 @@ their own, not a copy of Playwright's. Call `automated_tests` (app) to see which
 switch one on when the person asks (Test configuration → Automated tests in the app). With none
 on, the checklist is for people only: write no tests.
 
+**The rule — never broken, whoever writes them (qarunbook's AI, the person's own key, you):** the
+checklist says *what* a check tests; the code says *how*. Every test is written from the source
+files of the screens its check goes through — never from the checklist's wording alone, never from
+a list of words, never from another generated test (not even translating Playwright into Cypress).
+- Human checks and their tests come from the **same reading of the code**: write a section's
+  checks, then its tests from the same files, before moving on.
+- When the code shows a check is out of date (a renamed button, a step that no longer exists, a
+  message worded differently), **correct the check** (`update_check`), then write the test for the
+  corrected check. Never "correct" a check to hide a real bug.
+- When a test tool is switched on for a checklist that had no tests in it, **go back to the code**
+  for every check: write its test from the code, correct the checks that are out of date, and add
+  the checks a section is missing (`add_check`), each with its test.
+- **Where the code comes from** doesn't change the rule, but use the **most up-to-date** code. Look
+  at every source you can reach: the local folder, your own GitHub access, and qarunbook's
+  (`code_sources`, `repo_files`, `read_repo_file`). Use the one that's newest. Local is often ahead
+  of GitHub (changes not yet committed or pushed: check `git status` and `git log` against the
+  remote), or GitHub is ahead of an old local checkout. Make sure it's the branch the app being
+  tested is built from. Say in one line which source you used and why. Nothing has to be installed
+  first, not the qarunbook helper and not a test tool.
+- Every test names the files it was written from (`set_check_scripts` `from_files`), as paths in
+  the repository (or `repository:path`). qarunbook refuses a test without them.
+
 - If the app's checklists are written by qarunbook's AI or the person's own key, qarunbook writes
-  them itself — a checklist written from the code comes with its tests, and **Write … tests from
-  the code** (Test configuration → Automated tests) writes any still missing.
+  the tests itself, from the code, under the same rule — a checklist written from the code comes
+  with its tests, and switching a tool on (or **Write … tests from the code**) goes back to the
+  code for every check.
 - If **you** write the checklists (the person's own assistant), write the tests yourself, a
   section at a time, in each framework that is on, and save each with `set_check_scripts` (its
-  description has the exact format for Playwright, Cypress and Maestro). Follow the method below.
+  description has the exact format for Playwright, Cypress and Maestro), naming the files in
+  `from_files`. Follow the method below.
 
 ### The method: every test from the screen's code
 
