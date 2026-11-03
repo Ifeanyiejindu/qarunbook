@@ -11,6 +11,41 @@ missed bug.
 
 ## Derive it from the code, never from memory
 
+**The code decides the checklist.** Never start from an existing checklist, a feature list or what
+the app "should" do: read the code, write down what it does, and draw the checks from that. Do it
+in this order — the **code map** — and keep the map as notes while you work:
+
+1. **Routes first: the modules.** List every route (page or screen) and where it leads, and group
+   them into the app's modules by what a person does there: authentication, onboarding, each
+   product area, billing, settings, admin, public pages.
+2. **Map one module end to end.** Walk its routes in the order a person goes through them and read
+   each screen to the end. For every screen note:
+   - **Inputs**: the name exactly as shown, whole — read the shared input/label component: a
+     required `*` or "(optional)" is part of the name (`Full Name*`) — the placeholder, id or
+     testID, type, validation and its messages, and **when** a message appears (typing, leaving
+     the field, submitting). An error that appears under a field moves what is below it.
+   - **Buttons and links**: the name as shown (an icon-only one: its aria-label, or note that it
+     has none) and exactly when each is enabled or visible.
+   - **Actions**: what each sends (endpoint, payload) and gets back, following the call **into the
+     shared request helper**: many apps toast the server's message on every success or error, so
+     a message the page also prints appears twice (the page's is a paragraph; the toast's is not).
+   - **What is shown after** each outcome and **where it goes next**; what appears only under a
+     run-time condition (an AI's reply, a role, a plan, a flag) and how a person makes it appear.
+   - **The server**, when its code is there: exact messages, what it stores, and every email or text
+     (subject; a code, a link, or both; how long they last). Without it, mark these "server: not in
+     this code" and never guess.
+   - **State**: what is stored, and what a signed-in or signed-out person sees on opening it.
+   Every item names the file it comes from.
+3. **Checks from the map**: the main path through each journey, each validation and error the code
+   handles, each condition, each email — in the screen's own words, with the exact expected result
+   the map shows.
+4. **Tests from the map** (below): every name, message and wait in a test is an entry in the map.
+5. **An existing checklist** is only compared after the map is made: keep a check that matches,
+   correct one the code contradicts (`update_check`), flag one whose feature the code doesn't have,
+   and add what the map has that it lacks (`add_check`).
+6. **When the code changes**, map again only the modules whose files changed, then redraw their
+   checks and tests.
+
 Walk every codebase the product ships from — backend, web, each mobile app — and
 build the module list from what is actually there:
 
@@ -215,8 +250,8 @@ on, the checklist is for people only: write no tests.
 checklist says *what* a check tests; the code says *how*. Every test is written from the source
 files of the screens its check goes through — never from the checklist's wording alone, never from
 a list of words, never from another generated test (not even translating Playwright into Cypress).
-- Human checks and their tests come from the **same reading of the code**: write a section's
-  checks, then its tests from the same files, before moving on.
+- Human checks and their tests come from the **same reading of the code — the module's map**:
+  write a module's checks, then its tests from the same map, before moving on.
 - When the code shows a check is out of date (a renamed button, a step that no longer exists, a
   message worded differently), **correct the check** (`update_check`), then write the test for the
   corrected check. Never "correct" a check to hide a real bug.
