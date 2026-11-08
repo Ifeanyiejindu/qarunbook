@@ -267,6 +267,12 @@ a list of words, never from another generated test (not even translating Playwri
   first, not the qarunbook helper and not a test tool.
 - Every test names the files it was written from (`set_check_scripts` `from_files`), as paths in
   the repository (or `repository:path`). qarunbook refuses a test without them.
+- Every test follows its tool's own rules and best practice — how Playwright, Cypress and Maestro
+  actually read a test (whole-text regex in Maestro, tab labels reading "Home\nTab 1 of 5" on iOS,
+  the keyboard covering fields on Android, strict mode in Playwright, queued commands in Cypress,
+  waiting on state never on time, independent tests that make their own data). `check_scripts` and
+  `automated_tests` return them as `rules`: read them before the first test of a session and write
+  every test to them. A test that breaks one of them is wrong even if it passes once.
 
 - If the app's checklists are written by qarunbook's AI or the person's own key, qarunbook writes
   the tests itself, from the code, under the same rule — a checklist written from the code comes

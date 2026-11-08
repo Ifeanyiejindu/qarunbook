@@ -148,7 +148,7 @@ real card, a second phone) stays untested, saying why.
 **A test that keeps failing for the wrong reason** (a renamed button the run could not fix, a
 login that changed): read it with `check_scripts`, then the screen's code, and fix it the way the
 test-checklist skill writes tests (the words and ids as the code draws them, scrolled to, matched
-by pattern where they come from data) — written again from the code, never patched from the old
+by pattern where they come from data, and to the tool's `rules` that `check_scripts` returns) — written again from the code, never patched from the old
 test or the failure alone; save it with `set_check_scripts` (with `from_files`) and run it again with
 `run_tests`. A run picks up a test fixed while it is going. When many tests fail the same way, fix
 the cause in all of them, not one at a time. Fix the test, never mark the check by hand.
