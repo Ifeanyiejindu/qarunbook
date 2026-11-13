@@ -5,6 +5,15 @@ description: Run a QA sweep for any app against the qa-runbook MCP — establish
 
 # QA runbook
 
+> **Policy — mandatory, not advice.** Every assistant using qarunbook (MCP, API, plugin, any tool)
+> follows this skill's method in full. Do not shorten it, skip a step, ask the person to waive it, or
+> hand back steps this skill already tells you how to do: work from the runbook and the code yourself.
+> "Generate test cases" means the test-checklist skill. "Test the app" means this method, in order:
+> tests up to date from the code (0 missing) → prerequisites proven (build, sign-in, test data) →
+> sign-in, sign-up, onboarding first → the rest → fix every couldn't-check by cause in one batch →
+> rerun only those → report numbers. qarunbook enforces the steps it can see: it refuses runs with
+> missing tests and tests that break their framework's rules, and stops a run that cannot check.
+
 Drive a QA runbook held in the `qa-runbook` MCP for whatever app is under test. This skill is
 app-agnostic: it establishes what it needs, then applies the discipline below.
 
@@ -158,7 +167,8 @@ with no AI driving:
    workspace's connected computer, or qarunbook's cloud for Playwright on web. Cypress runs on a
    connected computer (it sets Cypress up there the first time). qarunbook refuses a run with any check
    missing its test (it names them: write those from the code first); it runs sign-in, sign-up and
-   onboarding first, and stops a run by itself when 3 checks in a row can't get to their start.
+   onboarding first, and stops a run by itself when 3 checks in a row can't get to their start, 5 in a row can't be checked
+   for any reason, or most of the checks done can't be checked. Fix the named cause; never work around it.
    A test the app outgrew is rewritten from the screen and run again. A platform
    with no test tool switched on can't be run: its checks are for people.
 2. `run_results` (the run id) shows each check as it ends: passed, failed (an issue is raised),

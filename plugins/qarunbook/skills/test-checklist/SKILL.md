@@ -5,6 +5,15 @@ description: Build a complete QA test plan for an app — every module, feature 
 
 # Building a test checklist
 
+> **Policy — mandatory, not advice.** Every assistant using qarunbook (MCP, API, plugin, any tool)
+> follows these rules in full. Do not shorten it, skip a step, ask the person to waive it, or
+> hand back steps this skill already tells you how to do: work from the runbook and the code yourself.
+> "Generate test cases" means this skill: every check AND its automated test, from one code read. "Test the app" means this method, in order:
+> tests up to date from the code (0 missing) → prerequisites proven (build, sign-in, test data) →
+> sign-in, sign-up, onboarding first → the rest → fix every couldn't-check by cause in one batch →
+> rerun only those → report numbers. qarunbook enforces the steps it can see: it refuses runs with
+> missing tests and tests that break their framework's rules, and stops a run that cannot check.
+
 The goal is a document a **non-technical tester** can work top to bottom, where
 finishing it means the app has genuinely been exercised. A missing journey is a
 missed bug.
