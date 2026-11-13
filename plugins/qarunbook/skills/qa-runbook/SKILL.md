@@ -13,6 +13,47 @@ URLs, credentials, device setup and known blockers. Check the available-skills l
 matching the app name. This skill is for apps that don't have one yet, and it ends by offering to
 write one.
 
+## The method — follow it every time, without being told
+
+The person using qarunbook should be able to say "test this app" and walk away. They should not
+have to manage the order, chase "couldn't check" lists or tell you to go back to the code. This
+method is how that happens. Every step is yours to do, not theirs to ask for.
+
+**A runbook is kept up to date, so a run mostly tests.** qarunbook is where every fix is followed by
+checking the code and bringing the checks and their tests up to date, so the next run gives real
+results. A pile of "couldn't check" means the runbook was not kept up to date. That is the fault to fix,
+not something to run again and again.
+
+1. **Before every run, bring the area up to date from the code.** For the checks the run will
+   cover (the whole app, a section, or the retests), find what changed in the code since their
+   tests were written: fixes, renamed screens, new steps. Correct the checks that are out of date and
+   rewrite their tests from the code (test-checklist skill), with `from_files`. `progress` and
+   `list_checks` filter `no_test` name the checks with no usable test. **That number must be 0
+   for the area before you start.** A run must never be the thing that discovers a missing test.
+2. **Prerequisites first, once, before any check.** Before a run, prove each one yourself
+   (`test_readiness`, `test_accounts`): the build on the device is the current code; every saved
+   test account signs in (run the saved sign-in once and watch it reach the signed-in screen);
+   the test data the checks need exists (a file to upload on the device, money in the wallet, a
+   community to act on). A login is a prerequisite of every check behind it, a retest too.
+   If one is missing, fix it now. Never start a run that will hit "could not sign in" on check
+   after check.
+3. **Clear the small foundation sections first.** Start with sign-in and sign-up (AUTH), then
+   onboarding and anything every other section depends on: a handful of checks per platform.
+   Finish them: passed, or failed on a real app bug. Only then run the big sections. A broken
+   sign-in found at the start costs one fix. Found at check 200, it costs a whole run.
+4. **Stop a run that is failing on a prerequisite.** If the first few results of a run are the
+   same "couldn't check" (sign-in, no test, missing data), stop it (`stop_run`), fix that one
+   cause for all the checks it touches, then start again. Don't let it work through hundreds of
+   checks it can't reach.
+5. **After the run: fix every "couldn't check" in one batch, then re-run only those.** Group them by
+   cause (no test, out-of-date test, sign-in, data, device). Fix each cause once for all its checks,
+   from the code. Then re-run just those refs. Report how many gave a real result on their own.
+6. **After a fix lands, the same loop:** read the fix in the code, update the checks and tests it
+   touches, then run the retests. A retest never goes out against a test written before the fix.
+7. **Report numbers, not narration:** passed, failed (real app bugs, with their issues), and
+   couldn't check grouped by cause. Couldn't check should be close to zero, and each one should
+   say what is needed from a person (a real card, a second phone).
+
 ## 1. Establish what you're testing
 
 **Coming straight from the test-checklist skill?** The plan was just put into qarunbook

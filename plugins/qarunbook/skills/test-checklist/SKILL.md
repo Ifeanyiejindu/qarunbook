@@ -351,6 +351,14 @@ before writing more. Only then write the rest, and run the section once it is sa
 When nothing can run them (no connected computer, the device is busy), save them and tell the
 person plainly which sections' tests have not been proven yet.
 
+## Keep it up to date after every fix
+
+The checklist is never finished. Whenever a fix lands or a screen changes, go back to the code
+for the area it touched. Correct the checks it made out of date, and rewrite their tests from the
+code before anyone runs them. A run should never be what finds a missing or out-of-date test.
+Before you hand over to a run, `progress` must show `no_usable_test` at 0 for the area, and the
+saved sign-in must be proven to work (see "The method" in the qa-runbook skill).
+
 ## Then offer to run it
 
 Finish by telling the user what is now in qarunbook — the app, how many sections
