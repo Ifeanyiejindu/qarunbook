@@ -53,6 +53,13 @@ not something to run again and again.
 7. **Report numbers, not narration:** passed, failed (real app bugs, with their issues), and
    couldn't check grouped by cause. Couldn't check should be close to zero, and each one should
    say what is needed from a person (a real card, a second phone).
+8. **Handing work to another assistant keeps the standard.** When you hand any of this work to
+   another assistant or subagent, pass the test tool's rules in full (or have it load this skill)
+   and require a rule-by-rule check before every save (test-checklist's "Pre-save check"). Never
+   tell it to skip, ignore, shorten or read the rules only once. Saving usage means trimming logs,
+   never dropping the standard. (The Confidant, Nov 2026: subagents told to "ignore" the rules after
+   one read wrote Maestro tests that asserted below the fold, behind an open dialog and under the
+   iOS keyboard, and the runs failed.)
 
 ## 1. Establish what you're testing
 

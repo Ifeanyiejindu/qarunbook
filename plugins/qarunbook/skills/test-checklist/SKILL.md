@@ -340,6 +340,29 @@ it never scrolled to, fails on every run. Read before you write.
    it truly cannot be automated (a real payment, a camera, a second device, an OS setting, a
    judgement of looks).
 
+### Pre-save check — before EVERY `set_check_scripts` (mandatory)
+
+Do this for every test, every time, including tests a subagent wrote. It is not optional overhead.
+
+1. **Walk the screen as the code draws it at that moment**, step by step. For every tap and every
+   assertion ask:
+   - Is it on screen now, or must it be scrolled to first (`scrollUntilVisible`, rule 2)?
+   - Is a dialog, bottom sheet, toast or permission prompt covering it (rule 9)? Close it first.
+   - Is the keyboard up from the last `inputText` (rule 12)? Hide it, or tap a heading above.
+   - Do the same words appear twice (the page and a toast, a heading and its button, rule 10/13)?
+   - Is it a Flutter merged label (a card read as one label, rule 23) or a tab label
+     (`"Home.*"`, rule 11)?
+2. **Go through the framework's full rule list** (the rules `check_scripts` returns), one by one,
+   against the test.
+3. **Then save**, with `rules_checked`: one line per assertion saying how it is visible, naming
+   its text or id (e.g. `"Welcome Back": first screen, top, no dialog, keyboard closed`). qarunbook
+   refuses a test whose `rules_checked` is empty, boilerplate, or skips an assertion, and refuses
+   tests that break a rule it can check (it names the rule number). Use `validate_only: true` to
+   check a test without saving it.
+
+When you hand test writing to a subagent, give it the full rules (or this skill) and this check.
+Never tell it to skip or ignore the rules.
+
 ### Prove them before writing the rest
 
 A test that has never run has never passed. After the first three tests of a section, save them
