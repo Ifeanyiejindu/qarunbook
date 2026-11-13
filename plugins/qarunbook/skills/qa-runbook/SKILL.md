@@ -149,8 +149,10 @@ with no AI driving:
 
 1. `run_tests` (app, platform code; optionally `refs` or `section`) starts the run on the
    workspace's connected computer, or qarunbook's cloud for Playwright on web. Cypress runs on a
-   connected computer (it sets Cypress up there the first time). A check with no test gets one
-   written first; a test the app outgrew is rewritten from the screen and run again. A platform
+   connected computer (it sets Cypress up there the first time). qarunbook refuses a run with any check
+   missing its test (it names them: write those from the code first); it runs sign-in, sign-up and
+   onboarding first, and stops a run by itself when 3 checks in a row can't get to their start.
+   A test the app outgrew is rewritten from the screen and run again. A platform
    with no test tool switched on can't be run: its checks are for people.
 2. `run_results` (the run id) shows each check as it ends: passed, failed (an issue is raised),
    couldn't check (with why — usually a saved login or test data to fix), or still to come. Call it
