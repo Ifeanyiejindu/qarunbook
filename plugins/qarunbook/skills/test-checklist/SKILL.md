@@ -345,9 +345,22 @@ it never scrolled to, fails on every run. Read before you write.
    `cy.qaSignUp()`, the test inbox with `qa.email()` / `qa.emailCode()` (Cypress `cy.qaEmail()` /
    `cy.qaEmailCode()`; Maestro `${TEST_EMAIL}` and `../qarunbook/email-code.js`), and
    `qa.unique('x')` / `cy.qaUnique('x')` / `${UNIQUE}` for names that must not repeat. Arrange
-   inside `qa.setup` / `cy.qaSetup`. Never a password in a test. Mark a check `manual_why` only when
-   it truly cannot be automated (a real payment, a camera, a second device, an OS setting, a
-   judgement of looks).
+   inside `qa.setup` / `cy.qaSetup`. Never a password in a test.
+
+### Left to people: only for a reason on the list (enforced)
+
+A check is left to people (`manual_why` plus `manual_reason`) ONLY for one of these:
+`money` (a real card, bank or live payment), `camera` (photo, scan, recording), `identity`
+(biometrics, liveness, an ID document), `physical-phone` (a real SMS to a handset, push on a
+physical device, phone OS settings), `outside-sign-in` (Google, Apple or another provider's own
+sign-in page), `design-file` (comparing with a Figma file), `long-wait` (something that only
+happens after more than 30 minutes), `judgement` (looks right, feels fast).
+
+Never for: a wait of up to 30 minutes (wait in the test, with a long enough timeout), an email
+(read the test inbox), an account or data in a state (make it in setup, or use a saved account),
+or two people or devices (two browser sessions with `qa.otherPage()`, or the phone against the
+website). qarunbook refuses any other reason and the check stays owed its test. Only `judgement`
+checks go to the AI tester; the rest are never tried by a run.
 
 ### Pre-save check — before EVERY `set_check_scripts` (mandatory)
 
@@ -374,7 +387,10 @@ Never tell it to skip or ignore the rules.
 
 ### Prove them before writing the rest
 
-A test that has never run has never passed. After the first three tests of a section, save them
+A test that has never run has never passed. qarunbook enforces this: a saved test is "not proven"
+until its first real result on the live app (a pass, or a fail the app caused). A run proves new
+tests first, in a run of their own, and stops itself when 5 of them (and over a third) don't
+match the app. After the first three tests of a section, save them
 and run them: `run_tests` (app, platform, `refs`) on each platform, then `run_results`. A test
 that stopped because it could not find something is your mistake, not the app's — read that
 screen's code again, find what you got wrong, and fix the same thing in every test of the section

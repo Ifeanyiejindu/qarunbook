@@ -45,7 +45,10 @@ not something to run again and again.
    the test data the checks need exists (a file to upload on the device, money in the wallet, a
    community to act on). A login is a prerequisite of every check behind it, a retest too.
    If one is missing, fix it now. Never start a run that will hit "could not sign in" on check
-   after check.
+   after check. qarunbook also checks these itself: a run doesn't start when its AI account is out
+   of credit; a web run signs in once as every saved account its checks use before any check, and
+   stops there if one fails; a check that sets up an account most of the remaining checks need
+   stops the run when it doesn't pass; and new tests are proven in a run of their own first.
 3. **Clear the small foundation sections first.** Start with sign-in and sign-up (AUTH), then
    onboarding and anything every other section depends on: a handful of checks per platform.
    Finish them: passed, or failed on a real app bug. Only then run the big sections. A broken
